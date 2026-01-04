@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz – Trous noirs</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b0f1a;
+      color: #ffffff;
+      text-align: center;
+      padding: 30px;
+    }
+    .quiz-box {
+      max-width: 600px;
+      margin: auto;
+      background: #151a2d;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      background: #4a6cf7;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #3a58d6;
+    }
+    #nextBtn {
+      display: none;
+      background: #00b894;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-box" id="quiz">
+    <h2 id="question"></h2>
+    <div id="answers"></div>
+    <p id="result"></p>
+    <button id="nextBtn">Suivant</button>
+  </div>
+
+  <script>
+    const quiz = [
+      {
+        question: "1. Un trou noir est-il un aspirateur géant qui avale tout ce qui passe ?",
+        answers: ["Oui", "Non"],
+        correct: "Oui",
+        explanation: "Un trou noir attire très fortement tout ce qui s’approche trop près."
+      },
+      {
+        question: "2. Peut-on voir un trou noir directement ?",
+        answers: ["Oui", "Non"],
+        correct: "Non",
+        explanation: "On observe seulement son ombre et ses effets sur la matière."
+      },
+      {
+        question: "3. Comment appelle-t-on la limite autour d’un trou noir ?",
+        answers: ["L’horizon des événements", "Le mur noir", "Le cercle gravitationnel"],
+        correct: "L’horizon des événements",
+        explanation: ""
+      },
+      {
+        question: "4. Quel phénomène a permis la première image d’un trou noir ?",
+        answers: ["Les ondes radio", "Les rayons gamma", "Les ultraviolets"],
+        correct: "Les ondes radio",
+        explanation: ""
+      },
+      {
+        question: "5. Quelle théorie explique les trous noirs ?",
+        answers: ["La théorie de l’évolution", "La relativité générale", "La mécanique classique"],
+        correct: "La relativité générale",
+        explanation: ""
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const answersEl = document.getElementById("answers");
+    const resultEl = document.getElementById("result");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function loadQuestion() {
+      resultEl.textContent = "";
+      nextBtn.style.display = "none";
+      answersEl.innerHTML = "";
+
+      const q = quiz[currentQuestion];
+      questionEl.textContent = q.question;
+
+      q.answers.forEach(answer => {
+        const btn = document.createElement("button");
+        btn.textContent = answer;
+        btn.onclick = () => checkAnswer(answer);
+        answersEl.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(answer) {
+      const q = quiz[currentQuestion];
+      if (answer === q.correct) {
+        resultEl.textContent = "✅ Vrai !";
+        score++;
+      } else {
+        resultEl.textContent = "❌ Faux, la bonne réponse est : " + q.correct;
+      }
+      if (q.explanation) {
+        resultEl.textContent += " — " + q.explanation;
+      }
+      nextBtn.style.display = "block";
+      document.querySelectorAll("#answers button").forEach(btn => btn.disabled = true);
+    }
+
+    nextBtn.onclick = () => {
+      currentQuestion++;
+      if (currentQuestion < quiz.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("quiz").innerHTML = `
+          <h2>🎉 Quiz terminé</h2>
+          <p>Score : ${score} / ${quiz.length}</p>
+          <button onclick="location.reload()">Recommencer</button>
+        `;
+      }
+    };
+
+    loadQuestion();
+  </script>
+
+</body>
+</html>
